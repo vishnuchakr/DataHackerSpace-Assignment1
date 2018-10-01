@@ -8,6 +8,7 @@ import json
 import csv
 import numpy as np
 
+
 def histogram_times(filename):
     crashCount = [0] * 24
     with open (filename) as f:
@@ -64,31 +65,27 @@ def single_type_candy_count(filename):
 
 def reflections_and_projections(points):
     points = np.array(points)
-    #reflects over y = 1
-    for i in range(0, len(points[1])):
-        points[1][i] =  points[1][i] * -1 + 2
+    dims = points.shape
+    returnArr = []
     
-            
-    #rotates by pi/2 radians
-    for i in range(0, len(points[0])):
-        points[0][i] = points[0][i] * -1
-    
-    for i in range(0, len(points[1])):
-        points[1][i] = points[1][i] * -1
-    
-    #projects the point onto y = 3x
-    
-
-    print(points)
-
+    for i in range(0, dims[1]):
+        vec = np.transpose(np.matrix(points[:, i]))
+        vec[1] = 2 - vec[1]
+        
+        rotMat = np.array([[0, -1], [1, 0]])
+        vec = np.matmul(rotMat, vec)
+        
+        projMat = np.array([[1, 3], [3, 9]])
+        projMat = (1/10) * projMat
+        vec = np.matmul(projMat, vec)
+        vec = np.transpose(vec)
+        
+        returnArr.append(vec)
+        
+    return np.transpose(np.concatenate(returnArr))
     
 def normalize(image):
     pass
 
 def sigmoid_normalize(image):
     pass
-
-histogram_times('airplane_crashes.csv')
-weigh_pokemons("pokedex.json", 10.0)
-single_type_candy_count("pokedex.json")
-reflections_and_projections([[1.32,5.57,3.01,6.34],[5.12,7.92,3.41,9.70]])
