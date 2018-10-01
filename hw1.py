@@ -4,6 +4,7 @@
 # Due September 24th, 2018
 #
 
+import math
 import json
 import csv
 import numpy as np
@@ -85,7 +86,22 @@ def reflections_and_projections(points):
     return np.transpose(np.concatenate(returnArr))
     
 def normalize(image):
-    pass
+    image = np.array(image)
+    max = np.amax(image)
+    min = np.amin(image)
+    scalar = 255 / (max - min)
+    for arr in image:
+        for pixel in arr:
+            pixel = scalar * (pixel - min)
+    
+    return image
 
-def sigmoid_normalize(image):
-    pass
+def sigmoid_normalize(image, a):
+    image = np.array(image)
+    
+    for arr in image:
+        for pixel in arr:
+            base = 1 + math.exp((-a ** -1) * (pixel - 128))
+            pixel = 255 * (base ** -1)
+    
+    return image
